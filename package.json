@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 {
   "name": "campus-event-platform",
   "version": "1.0.0",
@@ -28,3 +29,35 @@
     "vite": "^6.5.0"
   }
 }
+=======
+{
+  "name": "campus-event-platform",
+  "version": "1.0.0",
+  "description": "校园活动发布平台",
+  "main": "server/app.js",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "server": "node server/app.js",
+    "server:dev": "nodemon server/app.js"
+  },
+  "dependencies": {
+    "express": "^4.18.2",
+    "mongoose": "^7.6.3",
+    "bcryptjs": "^2.4.3",
+    "jsonwebtoken": "^9.0.2",
+    "cors": "^2.8.5",
+    "dotenv": "^16.3.1",
+    "vue": "^3.4.21",
+    "lucide-vue-next": "^0.36.0"
+  },
+  "devDependencies": {
+    "@tailwindcss/vite": "^4.0.0",
+    "autoprefixer": "^10.4.17",
+    "nodemon": "^3.0.1",
+    "postcss": "^8.4.35",
+    "vite": "^6.5.0"
+  }
+}
+>>>>>>> 7171262bb943f7d7dd4742093b74daf0b1ee6da7

@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
@@ -757,3 +758,1033 @@
   </script>
 </body>
 </html>
+=======
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>校园活动发布平台</title>
+  <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+  <style>
+    :root {
+      --primary-color: #1E88E5;
+      --secondary-color: #4CAF50;
+      --accent-color: #FF9800;
+      --bg-color: #f8f9fa;
+      --card-bg: #ffffff;
+      --text-primary: #333;
+      --text-secondary: #666;
+      --border-color: #e0e0e0;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: var(--bg-color);
+      min-height: 100vh;
+    }
+
+    .navbar {
+      background-color: var(--primary-color);
+      color: white;
+      padding: 15px 20px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .navbar .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .navbar h1 {
+      font-size: 24px;
+      font-weight: 600;
+    }
+
+    .navbar-buttons {
+      display: flex;
+      gap: 12px;
+    }
+
+    .btn {
+      padding: 10px 20px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 500;
+      transition: all 0.3s;
+    }
+
+    .btn-primary {
+      background-color: white;
+      color: var(--primary-color);
+    }
+
+    .btn-secondary {
+      background-color: var(--secondary-color);
+      color: white;
+    }
+
+    .btn-outline {
+      background-color: transparent;
+      color: white;
+      border: 1px solid white;
+    }
+
+    .btn-outline:hover {
+      background-color: rgba(255,255,255,0.1);
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+
+    .search-container {
+      margin: 30px 0;
+      display: flex;
+      gap: 12px;
+      background: white;
+      padding: 15px;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+
+    .search-input {
+      flex: 1;
+      padding: 12px 16px;
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      font-size: 14px;
+    }
+
+    .search-input:focus {
+      outline: none;
+      border-color: var(--primary-color);
+    }
+
+    .filter-select {
+      padding: 12px 16px;
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      font-size: 14px;
+      background: white;
+    }
+
+    .activities-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 24px;
+    }
+
+    .activity-card {
+      background: white;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      overflow: hidden;
+      cursor: pointer;
+      transition: transform 0.3s, box-shadow 0.3s;
+    }
+
+    .activity-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 8px 16px rgba(0,0,0,0.14);
+    }
+
+    .activity-image {
+      height: 180px;
+      overflow: hidden;
+      background: #f0f0f0;
+    }
+
+    .activity-image img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .activity-content {
+      padding: 20px;
+    }
+
+    .activity-content h3 {
+      margin-bottom: 12px;
+      font-size: 18px;
+      color: var(--text-primary);
+    }
+
+    .activity-content p {
+      font-size: 14px;
+      color: var(--text-secondary);
+      line-height: 1.5;
+      margin-bottom: 12px;
+      display: -webkit-box;
+      -webkit-line-clamp: 3;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+
+    .activity-info {
+      margin-bottom: 12px;
+    }
+
+    .activity-info-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 13px;
+      color: var(--text-secondary);
+      margin-bottom: 6px;
+    }
+
+    .activity-meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-top: 12px;
+      border-top: 1px solid var(--border-color);
+    }
+
+    .activity-category {
+      padding: 4px 12px;
+      border-radius: 12px;
+      font-size: 12px;
+      font-weight: 500;
+    }
+
+    .category-academic { background: #E3F2FD; color: #1E88E5; }
+    .category-cultural { background: #F3E5F5; color: #7B1FA2; }
+    .category-sports { background: #E8F5E8; color: #4CAF50; }
+    .category-social { background: #FFF3E0; color: #FF9800; }
+
+    .activity-publisher {
+      font-size: 12px;
+      color: #999;
+    }
+
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.5);
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+      padding: 20px;
+    }
+
+    .modal.show {
+      display: flex;
+    }
+
+    .modal-content {
+      background: white;
+      border-radius: 8px;
+      padding: 30px;
+      width: 100%;
+      max-width: 500px;
+      max-height: 90vh;
+      overflow-y: auto;
+    }
+
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+
+    .close {
+      font-size: 28px;
+      cursor: pointer;
+      color: #999;
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: 500;
+    }
+
+    .form-group input,
+    .form-group textarea,
+    .form-group select {
+      width: 100%;
+      padding: 12px 16px;
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      font-size: 14px;
+    }
+
+    .form-group textarea {
+      height: 100px;
+      resize: vertical;
+    }
+
+    .form-actions {
+      display: flex;
+      gap: 12px;
+      justify-content: flex-end;
+    }
+
+    .auth-tabs {
+      display: flex;
+      margin-bottom: 20px;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .auth-tab {
+      flex: 1;
+      padding: 12px;
+      text-align: center;
+      cursor: pointer;
+      font-weight: 500;
+      color: var(--text-secondary);
+      border-bottom: 2px solid transparent;
+    }
+
+    .auth-tab.active {
+      color: var(--primary-color);
+      border-bottom-color: var(--primary-color);
+    }
+
+    .auth-panel {
+      display: none;
+    }
+
+    .auth-panel.active {
+      display: block;
+    }
+
+    .activity-detail {
+      background: white;
+      border-radius: 8px;
+      padding: 30px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.12);
+    }
+
+    .activity-detail-header {
+      display: flex;
+      gap: 24px;
+      margin-bottom: 30px;
+    }
+
+    .detail-image {
+      flex: 0 0 300px;
+      height: 200px;
+      border-radius: 8px;
+      overflow: hidden;
+    }
+
+    .detail-image img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .detail-header-content h2 {
+      font-size: 28px;
+      margin-bottom: 16px;
+    }
+
+    .detail-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px;
+      padding: 20px;
+      background: var(--bg-color);
+      border-radius: 8px;
+    }
+
+    .detail-meta-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 14px;
+      color: var(--text-secondary);
+    }
+
+    .detail-description {
+      margin: 24px 0;
+      font-size: 16px;
+      line-height: 1.6;
+      color: var(--text-secondary);
+    }
+
+    .detail-actions {
+      display: flex;
+      gap: 12px;
+      padding-top: 20px;
+      border-top: 1px solid var(--border-color);
+    }
+
+    .comments-section {
+      margin-top: 40px;
+      padding-top: 30px;
+      border-top: 1px solid var(--border-color);
+    }
+
+    .comment-input {
+      width: 100%;
+      padding: 12px 16px;
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      min-height: 100px;
+      margin-bottom: 12px;
+    }
+
+    .comments-list {
+      margin-top: 20px;
+    }
+
+    .comment-item {
+      background: var(--bg-color);
+      padding: 16px;
+      border-radius: 8px;
+      margin-bottom: 12px;
+    }
+
+    .comment-header {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 8px;
+    }
+
+    .comment-author {
+      font-weight: 500;
+    }
+
+    .comment-time {
+      font-size: 12px;
+      color: #999;
+    }
+
+    .notification {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      padding: 16px 20px;
+      border-radius: 8px;
+      color: white;
+      font-weight: 500;
+      z-index: 1001;
+      animation: slideIn 0.3s;
+    }
+
+    .notification-success { background: var(--secondary-color); }
+    .notification-error { background: #f44336; }
+
+    @keyframes slideIn {
+      from { transform: translateX(100%); opacity: 0; }
+      to { transform: translateX(0); opacity: 1; }
+    }
+
+    .notification-badge {
+      position: absolute;
+      top: -5px;
+      right: -5px;
+      background: #f44336;
+      color: white;
+      border-radius: 50%;
+      width: 20px;
+      height: 20px;
+      font-size: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .notifications-list {
+      max-height: 400px;
+      overflow-y: auto;
+    }
+
+    .notification-item {
+      padding: 16px;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .notification-item.unread {
+      background: #E3F2FD;
+      border-left: 4px solid var(--primary-color);
+    }
+
+    @media (max-width: 768px) {
+      .navbar .container { flex-direction: column; gap: 12px; }
+      .navbar-buttons { width: 100%; justify-content: center; }
+      .search-container { flex-direction: column; }
+      .activities-grid { grid-template-columns: 1fr; }
+      .activity-detail-header { flex-direction: column; }
+      .detail-image { flex: 0 0 200px; width: 100%; }
+    }
+  </style>
+</head>
+<body>
+  <div id="app">
+    <nav class="navbar">
+      <div class="container">
+        <h1>校园活动发布平台</h1>
+        <div class="navbar-buttons">
+          <button 
+            class="btn btn-outline" 
+            :disabled="isLoggedIn"
+            @click="showAuthModal = true"
+          >
+            {{ isLoggedIn ? '欢迎, ' + currentUser : '登录' }}
+          </button>
+          <button class="btn btn-outline" @click="showNotificationModal = true" style="position: relative;">
+            通知
+            <span v-if="unreadCount > 0" class="notification-badge">{{ unreadCount }}</span>
+          </button>
+          <button class="btn btn-primary" @click="showPublishModal = true">发布活动</button>
+        </div>
+      </div>
+    </nav>
+
+    <div class="container">
+      <div class="search-container">
+        <input 
+          v-model="searchQuery" 
+          type="text" 
+          class="search-input" 
+          placeholder="搜索活动..."
+          @keyup.enter="searchActivities"
+        />
+        <select v-model="categoryFilter" class="filter-select">
+          <option value="all">全部分类</option>
+          <option value="academic">学术活动</option>
+          <option value="cultural">文化活动</option>
+          <option value="sports">体育活动</option>
+          <option value="social">社交活动</option>
+        </select>
+        <button class="btn btn-primary" @click="searchActivities">搜索</button>
+      </div>
+
+      <div v-if="!currentActivity">
+        <h2 style="margin: 30px 0 20px; font-size: 24px;">最新活动</h2>
+        <div v-if="filteredActivities.length === 0" style="text-align: center; padding: 40px;">
+          没有找到活动
+        </div>
+        <div class="activities-grid" v-else>
+          <div 
+            v-for="activity in filteredActivities" 
+            :key="activity.id" 
+            class="activity-card"
+            @click="showActivityDetail(activity.id)"
+          >
+            <div class="activity-image">
+              <img :src="activity.image" :alt="activity.title" />
+            </div>
+            <div class="activity-content">
+              <h3>{{ activity.title }}</h3>
+              <p>{{ activity.description }}</p>
+              <div class="activity-info">
+                <div class="activity-info-item">
+                  <span>📅</span>
+                  <span>{{ formatDateTime(activity.time) }}</span>
+                </div>
+                <div class="activity-info-item">
+                  <span>📍</span>
+                  <span>{{ activity.location }}</span>
+                </div>
+              </div>
+              <div class="activity-meta">
+                <span :class="['activity-category', 'category-' + activity.category]">
+                  {{ getCategoryText(activity.category) }}
+                </span>
+                <span class="activity-publisher">{{ activity.publisher }}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div v-else class="activity-detail">
+        <button class="btn" @click="currentActivity = null">返回列表</button>
+        <div class="activity-detail-header">
+          <div class="detail-image">
+            <img :src="currentActivity.image" :alt="currentActivity.title" />
+          </div>
+          <div class="detail-header-content">
+            <h2>{{ currentActivity.title }}</h2>
+            <div class="detail-meta">
+              <div class="detail-meta-item">
+                <span>📅</span>
+                <span>{{ formatDateTime(currentActivity.time) }}</span>
+              </div>
+              <div class="detail-meta-item">
+                <span>📍</span>
+                <span>{{ currentActivity.location }}</span>
+              </div>
+              <div class="detail-meta-item">
+                <span>🏷️</span>
+                <span>{{ getCategoryText(currentActivity.category) }}</span>
+              </div>
+              <div class="detail-meta-item">
+                <span>👤</span>
+                <span>{{ currentActivity.publisher }}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="detail-description">{{ currentActivity.description }}</div>
+        <div class="detail-actions">
+          <button class="btn btn-secondary" @click="handleJoin">报名参加</button>
+          <button class="btn btn-outline" @click="handleFavorite">
+            {{ isFavorited ? '❤️ 已收藏' : '🤍 收藏' }}
+          </button>
+          <button class="btn btn-outline" @click="handleShare">分享</button>
+        </div>
+
+        <div class="comments-section">
+          <h3 style="margin-bottom: 20px;">评论</h3>
+          <textarea v-model="newComment" class="comment-input" placeholder="写下你的评论..."></textarea>
+          <button class="btn btn-primary" @click="addComment">发布评论</button>
+          <div class="comments-list">
+            <div v-if="currentActivity.comments.length === 0" style="text-align: center; padding: 20px; color: #999;">
+              暂无评论
+            </div>
+            <div v-for="comment in currentActivity.comments" :key="comment.id" class="comment-item">
+              <div class="comment-header">
+                <span class="comment-author">{{ comment.author }}</span>
+                <span class="comment-time">{{ formatDateTime(comment.time) }}</span>
+              </div>
+              <p>{{ comment.content }}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div :class="['modal', { show: showAuthModal }]" @click.self="showAuthModal = false">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h2>用户认证</h2>
+          <span class="close" @click="showAuthModal = false">&times;</span>
+        </div>
+        <div class="auth-tabs">
+          <div :class="['auth-tab', { active: authTab === 'login' }]" @click="authTab = 'login'">登录</div>
+          <div :class="['auth-tab', { active: authTab === 'register' }]" @click="authTab = 'register'">注册</div>
+        </div>
+
+        <div :class="['auth-panel', { active: authTab === 'login' }]">
+          <form @submit.prevent="handleLogin">
+            <div class="form-group">
+              <label>用户名</label>
+              <input v-model="loginForm.username" type="text" required />
+            </div>
+            <div class="form-group">
+              <label>密码</label>
+              <input v-model="loginForm.password" type="password" required />
+            </div>
+            <div class="form-actions">
+              <button type="submit" class="btn btn-primary">登录</button>
+            </div>
+            <p style="text-align: center; margin-top: 16px; font-size: 14px; color: #666;">
+              还没有账号？<span style="color: var(--primary-color); cursor: pointer;" @click="authTab = 'register'">立即注册</span>
+            </p>
+          </form>
+        </div>
+
+        <div :class="['auth-panel', { active: authTab === 'register' }]">
+          <form @submit.prevent="handleRegister">
+            <div class="form-group">
+              <label>用户名</label>
+              <input v-model="registerForm.username" type="text" required />
+            </div>
+            <div class="form-group">
+              <label>邮箱</label>
+              <input v-model="registerForm.email" type="email" required />
+            </div>
+            <div class="form-group">
+              <label>密码</label>
+              <input v-model="registerForm.password" type="password" required />
+            </div>
+            <div class="form-group">
+              <label>确认密码</label>
+              <input v-model="registerForm.confirmPassword" type="password" required />
+            </div>
+            <div class="form-actions">
+              <button type="submit" class="btn btn-primary">注册</button>
+            </div>
+            <p style="text-align: center; margin-top: 16px; font-size: 14px; color: #666;">
+              已有账号？<span style="color: var(--primary-color); cursor: pointer;" @click="authTab = 'login'">立即登录</span>
+            </p>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <div :class="['modal', { show: showPublishModal }]" @click.self="showPublishModal = false">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h2>发布活动</h2>
+          <span class="close" @click="showPublishModal = false">&times;</span>
+        </div>
+        <form @submit.prevent="handlePublish">
+          <div class="form-group">
+            <label>活动标题</label>
+            <input v-model="publishForm.title" type="text" required />
+          </div>
+          <div class="form-group">
+            <label>活动描述</label>
+            <textarea v-model="publishForm.description" required></textarea>
+          </div>
+          <div class="form-group">
+            <label>活动时间</label>
+            <input v-model="publishForm.time" type="datetime-local" required />
+          </div>
+          <div class="form-group">
+            <label>活动地点</label>
+            <input v-model="publishForm.location" type="text" required />
+          </div>
+          <div class="form-group">
+            <label>活动分类</label>
+            <select v-model="publishForm.category" required>
+              <option value="academic">学术活动</option>
+              <option value="cultural">文化活动</option>
+              <option value="sports">体育活动</option>
+              <option value="social">社交活动</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>发布者</label>
+            <input v-model="publishForm.publisher" type="text" required />
+          </div>
+          <div class="form-actions">
+            <button type="button" class="btn" @click="showPublishModal = false">取消</button>
+            <button type="submit" class="btn btn-primary">发布</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <div :class="['modal', { show: showNotificationModal }]" @click.self="showNotificationModal = false">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h2>通知中心</h2>
+          <span class="close" @click="showNotificationModal = false">&times;</span>
+        </div>
+        <div class="notifications-list">
+          <div v-if="notifications.length === 0" style="text-align: center; padding: 40px; color: #999;">
+            暂无通知
+          </div>
+          <div 
+            v-for="notification in notifications" 
+            :key="notification.id"
+            :class="['notification-item', { unread: !notification.read }]"
+            @click="notification.read = true"
+          >
+            <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+              <h4 style="margin: 0;">{{ notification.title }}</h4>
+              <span style="font-size: 12px; color: #999;">{{ formatDateTime(notification.time) }}</span>
+            </div>
+            <p style="font-size: 14px; color: #666;">{{ notification.content }}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div v-if="notification" :class="['notification', 'notification-' + notification.type]">
+      {{ notification.message }}
+    </div>
+  </div>
+
+  <script>
+    const { createApp, ref, computed, watch } = Vue
+
+    createApp({
+      setup() {
+        const activities = ref([
+          {
+            id: 1,
+            title: '编程大赛',
+            description: '校园编程大赛，面向全校学生，展示编程技能，赢取丰厚奖品。比赛分为算法、Web开发、移动应用开发三个赛道，每个赛道设一、二、三等奖，总奖金超过10000元。欢迎各位同学积极参与！',
+            time: '2026-05-10T14:00',
+            location: '科技楼301教室',
+            category: 'academic',
+            publisher: '计算机协会',
+            image: 'https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=programming%20competition%20campus&image_size=landscape_16_9',
+            comments: [
+              { id: 1, author: '张三', content: '这个比赛很有意思，我要参加！', time: '2026-04-20T10:00' },
+              { id: 2, author: '李四', content: '去年我参加过，收获很大', time: '2026-04-21T14:30' }
+            ]
+          },
+          {
+            id: 2,
+            title: '校园音乐节',
+            description: '校园音乐节，邀请校内外乐队演出，享受音乐盛宴。本次音乐节将持续3天，每天晚上7点开始，邀请了校内知名乐队和校外专业乐队参演。',
+            time: '2026-05-15T18:00',
+            location: '露天剧场',
+            category: 'cultural',
+            publisher: '文艺部',
+            image: 'https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=campus%20music%20festival&image_size=landscape_16_9',
+            comments: [{ id: 1, author: '王五', content: '期待已久！', time: '2026-04-18T09:20' }]
+          },
+          {
+            id: 3,
+            title: '篮球比赛',
+            description: '学院篮球比赛，各系组队参赛，争夺冠军奖杯。比赛采用单循环赛制，每个系派出一支队伍，经过小组赛和淘汰赛，最终决出冠军。',
+            time: '2026-05-08T16:00',
+            location: '体育馆',
+            category: 'sports',
+            publisher: '体育部',
+            image: 'https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=campus%20basketball%20game&image_size=landscape_16_9',
+            comments: []
+          },
+          {
+            id: 4,
+            title: '新生见面会',
+            description: '为新生举办的见面会，帮助新生熟悉校园环境，认识同学。活动包括校园参观、学长学姐经验分享、破冰游戏等环节。',
+            time: '2026-05-01T10:00',
+            location: '多功能厅',
+            category: 'social',
+            publisher: '学生会',
+            image: 'https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=campus%20freshman%20meeting&image_size=landscape_16_9',
+            comments: []
+          }
+        ])
+
+        const notifications = ref(JSON.parse(localStorage.getItem('notifications') || '[]'))
+        const isLoggedIn = ref(localStorage.getItem('isLoggedIn') === 'true')
+        const currentUser = ref(localStorage.getItem('currentUser') || null)
+        const currentActivity = ref(null)
+        const searchQuery = ref('')
+        const categoryFilter = ref('all')
+        const notification = ref(null)
+
+        const showAuthModal = ref(false)
+        const showPublishModal = ref(false)
+        const showNotificationModal = ref(false)
+        const authTab = ref('login')
+        const isFavorited = ref(false)
+        const newComment = ref('')
+
+        const loginForm = ref({ username: '', password: '' })
+        const registerForm = ref({ username: '', email: '', password: '', confirmPassword: '' })
+        const publishForm = ref({ title: '', description: '', time: '', location: '', category: '', publisher: '' })
+
+        let currentId = 5
+        let currentCommentId = 3
+
+        const categories = {
+          academic: '学术活动',
+          cultural: '文化活动',
+          sports: '体育活动',
+          social: '社交活动'
+        }
+
+        const filteredActivities = computed(() => {
+          return activities.value.filter(activity => {
+            const matchesSearch = activity.title.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
+                                 activity.description.toLowerCase().includes(searchQuery.value.toLowerCase())
+            const matchesCategory = categoryFilter.value === 'all' || activity.category === categoryFilter.value
+            return matchesSearch && matchesCategory
+          })
+        })
+
+        const unreadCount = computed(() => {
+          return notifications.value.filter(n => !n.read).length
+        })
+
+        function formatDateTime(dateTimeString) {
+          const date = new Date(dateTimeString)
+          return date.toLocaleString('zh-CN', {
+            year: 'numeric',
+            month: '2-digit',
+            day: '2-digit',
+            hour: '2-digit',
+            minute: '2-digit'
+          })
+        }
+
+        function getCategoryText(category) {
+          return categories[category] || category
+        }
+
+        function showNotification(message, type = 'success') {
+          notification.value = { message, type }
+          setTimeout(() => notification.value = null, 3000)
+        }
+
+        function showActivityDetail(id) {
+          currentActivity.value = activities.value.find(a => a.id === id)
+          isFavorited.value = false
+        }
+
+        function searchActivities() {}
+
+        function handleLogin() {
+          if (!loginForm.value.username || !loginForm.value.password) {
+            showNotification('请输入用户名和密码', 'error')
+            return
+          }
+          isLoggedIn.value = true
+          currentUser.value = loginForm.value.username
+          localStorage.setItem('isLoggedIn', 'true')
+          localStorage.setItem('currentUser', loginForm.value.username)
+          loginForm.value = { username: '', password: '' }
+          showAuthModal.value = false
+          showNotification('登录成功', 'success')
+          addNotification('登录成功', '您已成功登录校园活动发布平台')
+        }
+
+        function handleRegister() {
+          if (!registerForm.value.username || !registerForm.value.email || 
+              !registerForm.value.password || !registerForm.value.confirmPassword) {
+            showNotification('请填写所有字段', 'error')
+            return
+          }
+          if (registerForm.value.password !== registerForm.value.confirmPassword) {
+            showNotification('两次输入的密码不一致', 'error')
+            return
+          }
+          isLoggedIn.value = true
+          currentUser.value = registerForm.value.username
+          localStorage.setItem('isLoggedIn', 'true')
+          localStorage.setItem('currentUser', registerForm.value.username)
+          registerForm.value = { username: '', email: '', password: '', confirmPassword: '' }
+          showAuthModal.value = false
+          showNotification('注册成功', 'success')
+          addNotification('注册成功', '您已成功注册校园活动发布平台')
+        }
+
+        function handlePublish() {
+          if (!isLoggedIn.value) {
+            showNotification('请先登录', 'error')
+            showAuthModal.value = true
+            return
+          }
+          activities.value.unshift({
+            id: currentId++,
+            ...publishForm.value,
+            image: `https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=${encodeURIComponent(publishForm.value.title)}&image_size=landscape_16_9`,
+            comments: []
+          })
+          publishForm.value = { title: '', description: '', time: '', location: '', category: '', publisher: '' }
+          showPublishModal.value = false
+          showNotification('活动发布成功', 'success')
+        }
+
+        function handleJoin() {
+          if (!isLoggedIn.value) {
+            showNotification('请先登录', 'error')
+            showAuthModal.value = true
+            return
+          }
+          showNotification('报名成功', 'success')
+        }
+
+        function handleFavorite() {
+          if (!isLoggedIn.value) {
+            showNotification('请先登录', 'error')
+            showAuthModal.value = true
+            return
+          }
+          isFavorited.value = !isFavorited.value
+          showNotification(isFavorited.value ? '收藏成功' : '取消收藏', 'success')
+        }
+
+        function handleShare() {
+          navigator.clipboard.writeText(window.location.href).then(() => {
+            showNotification('链接已复制', 'success')
+          })
+        }
+
+        function addComment() {
+          if (!isLoggedIn.value) {
+            showNotification('请先登录', 'error')
+            showAuthModal.value = true
+            return
+          }
+          if (!newComment.value.trim()) {
+            showNotification('请输入评论内容', 'error')
+            return
+          }
+          currentActivity.value.comments.push({
+            id: currentCommentId++,
+            author: currentUser.value,
+            content: newComment.value,
+            time: new Date().toISOString()
+          })
+          newComment.value = ''
+          showNotification('评论发布成功', 'success')
+        }
+
+        function addNotification(title, content) {
+          notifications.value.unshift({
+            id: Date.now(),
+            title,
+            content,
+            time: new Date().toISOString(),
+            read: false
+          })
+          localStorage.setItem('notifications', JSON.stringify(notifications.value))
+        }
+
+        watch(showNotificationModal, (newVal) => {
+          if (newVal) {
+            notifications.value.forEach(n => n.read = true)
+            localStorage.setItem('notifications', JSON.stringify(notifications.value))
+          }
+        })
+
+        return {
+          activities,
+          notifications,
+          isLoggedIn,
+          currentUser,
+          currentActivity,
+          searchQuery,
+          categoryFilter,
+          notification,
+          showAuthModal,
+          showPublishModal,
+          showNotificationModal,
+          authTab,
+          isFavorited,
+          newComment,
+          loginForm,
+          registerForm,
+          publishForm,
+          filteredActivities,
+          unreadCount,
+          formatDateTime,
+          getCategoryText,
+          showActivityDetail,
+          searchActivities,
+          handleLogin,
+          handleRegister,
+          handlePublish,
+          handleJoin,
+          handleFavorite,
+          handleShare,
+          addComment
+        }
+      }
+    }).mount('#app')
+  </script>
+</body>
+</html>
+>>>>>>> 7171262bb943f7d7dd4742093b74daf0b1ee6da7
