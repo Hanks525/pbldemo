@@ -3,757 +3,1576 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>校园活动发布平台</title>
+  <title>校园活动平台</title>
   <style>
+    :root {
+      --primary: #6366f1;
+      --primary-dark: #4f46e5;
+      --primary-light: #818cf8;
+      --secondary: #22c55e;
+      --secondary-light: #4ade80;
+      --warning: #f59e0b;
+      --danger: #ef4444;
+      --text-primary: #1f2937;
+      --text-secondary: #6b7280;
+      --text-muted: #9ca3af;
+      --bg-page: #f8fafc;
+      --bg-card: #ffffff;
+      --border: #e2e8f0;
+      --radius: 10px;
+      --radius-lg: 16px;
+      --radius-xl: 20px;
+      --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
+      --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.08);
+      --shadow-lg: 0 10px 25px rgba(99, 102, 241, 0.1);
+    }
+
     * { margin: 0; padding: 0; box-sizing: border-box; }
-    body { font-family: 'Segoe UI', sans-serif; background-color: #f5f5f5; }
-    
+    body { 
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; 
+      background: linear-gradient(135deg, #f0f5ff 0%, #fef3c7 50%, #fce7f3 100%);
+      min-height: 100vh;
+      color: var(--text-primary);
+    }
+
     .navbar {
-      background-color: #1E88E5;
-      color: white;
-      padding: 15px 20px;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid rgba(226, 232, 240, 0.5);
+      padding: 16px 24px;
       position: sticky;
       top: 0;
       z-index: 100;
+      box-shadow: var(--shadow-sm);
     }
-    
-    .navbar .container {
+    .navbar .inner {
       max-width: 1200px;
       margin: 0 auto;
       display: flex;
       justify-content: space-between;
       align-items: center;
     }
-    
-    .navbar h1 { font-size: 24px; font-weight: 600; }
-    
+    .navbar h1 { 
+      font-size: 22px; 
+      font-weight: 700;
+      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .navbar-actions {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+    }
+
     .btn {
-      padding: 10px 20px;
+      padding: 9px 18px;
       border: none;
-      border-radius: 8px;
+      border-radius: var(--radius);
       cursor: pointer;
       font-size: 14px;
       font-weight: 500;
+      transition: all 200ms ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
     }
-    
-    .btn-primary { background: white; color: #1E88E5; }
-    .btn-secondary { background: #4CAF50; color: white; }
-    .btn-outline { background: transparent; color: white; border: 1px solid white; }
-    
-    .container { max-width: 1200px; margin: 0 auto; padding: 20px; }
-    
-    .search-container {
-      margin: 30px 0;
+    .btn-primary { 
+      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+      color: white;
+      box-shadow: 0 4px 15px rgba(99, 102, 241, 0.3);
+    }
+    .btn-primary:hover { 
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(99, 102, 241, 0.4);
+    }
+    .btn-outline { 
+      background: white; 
+      color: var(--text-primary); 
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow-sm);
+    }
+    .btn-outline:hover { 
+      background: var(--bg-page); 
+      border-color: var(--primary);
+      transform: translateY(-1px);
+    }
+    .btn-sm { padding: 6px 12px; font-size: 13px; }
+
+    .page {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 24px;
+    }
+
+    .hero-section {
+      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+      border-radius: var(--radius-xl);
+      padding: 32px;
+      margin-bottom: 24px;
+      color: white;
+      text-align: center;
+      box-shadow: var(--shadow-lg);
+    }
+    .hero-title {
+      font-size: 28px;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+    .hero-desc {
+      font-size: 15px;
+      opacity: 0.9;
+    }
+
+    .search-area {
       display: flex;
       gap: 12px;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+      align-items: center;
       background: white;
-      padding: 15px;
-      border-radius: 8px;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      padding: 16px;
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-md);
     }
-    
-    .search-input {
+    .search-box {
       flex: 1;
+      min-width: 200px;
+      max-width: 350px;
       padding: 12px 16px;
-      border: 1px solid #ddd;
-      border-radius: 8px;
+      border: 2px solid var(--border);
+      border-radius: var(--radius);
+      font-size: 14px;
+      transition: all 200ms;
     }
-    
+    .search-box:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+    }
     .filter-select {
-      padding: 12px 16px;
-      border: 1px solid #ddd;
-      border-radius: 8px;
+      padding: 12px 14px;
+      border: 2px solid var(--border);
+      border-radius: var(--radius);
+      font-size: 14px;
       background: white;
+      cursor: pointer;
+      transition: all 200ms;
     }
-    
-    .activities-grid {
+    .filter-select:focus {
+      outline: none;
+      border-color: var(--primary);
+    }
+
+    .stats-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-      gap: 24px;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+      margin-bottom: 24px;
     }
-    
+    .stat-card {
+      background: white;
+      padding: 20px;
+      border-radius: var(--radius-lg);
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      box-shadow: var(--shadow-md);
+      transition: all 200ms;
+    }
+    .stat-card:hover {
+      transform: translateY(-4px);
+      box-shadow: var(--shadow-lg);
+    }
+    .stat-icon {
+      width: 44px;
+      height: 44px;
+      border-radius: var(--radius);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+    }
+    .stat-icon.blue { 
+      background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%); 
+      color: #3b82f6;
+    }
+    .stat-icon.green { 
+      background: linear-gradient(135deg, #dcfce7 0%, #bbf7d0 100%); 
+      color: #22c55e;
+    }
+    .stat-icon.orange { 
+      background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%); 
+      color: #f59e0b;
+    }
+    .stat-icon.purple { 
+      background: linear-gradient(135deg, #f3e8ff 0%, #e9d5ff 100%); 
+      color: #8b5cf6;
+    }
+    .stat-value { 
+      font-size: 24px; 
+      font-weight: 700; 
+      color: var(--text-primary);
+    }
+    .stat-label { 
+      font-size: 12px; 
+      color: var(--text-muted); 
+      margin-top: 2px;
+    }
+
+    .content-layout {
+      display: grid;
+      grid-template-columns: 1fr 280px;
+      gap: 20px;
+    }
+    @media (max-width: 900px) {
+      .content-layout { grid-template-columns: 1fr; }
+      .stats-grid { grid-template-columns: repeat(2, 1fr); }
+      .hero-title { font-size: 22px; }
+    }
+
+    .section-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 18px;
+    }
+    .section-title { 
+      font-size: 18px; 
+      font-weight: 600; 
+      color: var(--text-primary);
+    }
+
+    .activities-list {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 18px;
+    }
+
     .activity-card {
       background: white;
-      border-radius: 8px;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      border-radius: var(--radius-xl);
       overflow: hidden;
       cursor: pointer;
-      transition: transform 0.3s;
+      transition: all 300ms ease;
+      box-shadow: var(--shadow-md);
     }
-    
-    .activity-card:hover { transform: translateY(-5px); }
-    
-    .activity-image {
-      height: 180px;
-      background: #f0f0f0;
+    .activity-card:hover { 
+      transform: translateY(-6px) scale(1.02);
+      box-shadow: var(--shadow-lg);
+    }
+    .activity-cover {
+      height: 160px;
+      background: linear-gradient(135deg, var(--bg-page) 0%, #e2e8f0 100%);
       overflow: hidden;
+      position: relative;
     }
-    
-    .activity-image img {
+    .activity-cover img {
       width: 100%;
       height: 100%;
       object-fit: cover;
+      transition: transform 400ms ease;
     }
-    
-    .activity-content { padding: 20px; }
-    
-    .activity-content h3 {
-      margin-bottom: 12px;
-      font-size: 18px;
-      color: #333;
+    .activity-card:hover .activity-cover img {
+      transform: scale(1.08);
     }
-    
-    .activity-content p {
-      font-size: 14px;
-      color: #666;
-      line-height: 1.5;
+    .activity-cover .placeholder {
+      font-size: 40px;
+      opacity: 0.6;
+    }
+    .activity-badge {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      padding: 5px 12px;
+      border-radius: 20px;
+      font-size: 11px;
+      font-weight: 600;
+      backdrop-filter: blur(10px);
+    }
+    .badge-upcoming { 
+      background: rgba(245, 158, 11, 0.9); 
+      color: white; 
+    }
+    .badge-active { 
+      background: rgba(34, 197, 94, 0.9); 
+      color: white; 
+    }
+    .badge-ended { 
+      background: rgba(156, 163, 175, 0.9); 
+      color: white; 
+    }
+
+    .activity-body { padding: 16px; }
+    .activity-title {
+      font-size: 16px;
+      font-weight: 600;
+      margin-bottom: 8px;
+      line-height: 1.4;
       display: -webkit-box;
-      -webkit-line-clamp: 3;
+      -webkit-line-clamp: 2;
       -webkit-box-orient: vertical;
       overflow: hidden;
+      color: var(--text-primary);
+    }
+    .activity-desc {
+      font-size: 13px;
+      color: var(--text-secondary);
+      line-height: 1.5;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+      margin-bottom: 10px;
+    }
+    .activity-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 5px;
       margin-bottom: 12px;
     }
-    
-    .activity-info-item {
+    .activity-tag {
+      padding: 3px 10px;
+      background: var(--bg-page);
+      border-radius: 12px;
+      font-size: 11px;
+      color: var(--text-secondary);
+      transition: all 200ms;
+    }
+    .activity-tag:hover {
+      background: var(--primary);
+      color: white;
+    }
+    .activity-info {
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-bottom: 5px;
       display: flex;
       align-items: center;
-      gap: 8px;
-      font-size: 13px;
-      color: #666;
-      margin-bottom: 6px;
+      gap: 5px;
     }
-    
-    .activity-meta {
+    .activity-footer {
       display: flex;
       justify-content: space-between;
       align-items: center;
       padding-top: 12px;
-      border-top: 1px solid #eee;
-      margin-top: 12px;
+      border-top: 1px solid var(--border);
+      margin-top: 10px;
     }
-    
-    .activity-category {
+    .activity-cat {
       padding: 4px 12px;
-      border-radius: 12px;
-      font-size: 12px;
+      border-radius: 8px;
+      font-size: 11px;
       font-weight: 500;
     }
-    
-    .category-academic { background: #E3F2FD; color: #1E88E5; }
-    .category-cultural { background: #F3E5F5; color: #7B1FA2; }
-    .category-sports { background: #E8F5E8; color: #4CAF50; }
-    .category-social { background: #FFF3E0; color: #FF9800; }
-    
-    .activity-publisher { font-size: 12px; color: #999; }
-    
-    .modal {
+    .cat-academic { 
+      background: linear-gradient(135deg, #e0e7ff 0%, #c7d2fe 100%); 
+      color: var(--primary); 
+    }
+    .cat-cultural { 
+      background: linear-gradient(135deg, #fce7f3 0%, #fbcfe8 100%); 
+      color: #be185d; 
+    }
+    .cat-sports { 
+      background: linear-gradient(135deg, #dcfce7 0%, #bbf7d0 100%); 
+      color: var(--secondary); 
+    }
+    .cat-social { 
+      background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%); 
+      color: var(--warning); 
+    }
+
+    .sidebar {
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+    }
+    .side-card {
+      background: white;
+      border-radius: var(--radius-lg);
+      padding: 18px;
+      box-shadow: var(--shadow-md);
+    }
+    .side-card h3 {
+      font-size: 14px;
+      font-weight: 600;
+      margin-bottom: 14px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid var(--border);
+      color: var(--text-primary);
+    }
+
+    .hot-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .hot-item {
+      display: flex;
+      gap: 10px;
+      padding: 8px;
+      border-radius: var(--radius);
+      cursor: pointer;
+      transition: all 200ms;
+    }
+    .hot-item:hover { 
+      background: var(--bg-page);
+      transform: translateX(4px);
+    }
+    .hot-rank {
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      background: var(--bg-page);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      font-weight: 700;
+      flex-shrink: 0;
+    }
+    .hot-rank.top { 
+      background: linear-gradient(135deg, var(--warning) 0%, #d97706 100%); 
+      color: white; 
+    }
+    .hot-info {
+      flex: 1;
+      min-width: 0;
+    }
+    .hot-title {
+      font-size: 13px;
+      font-weight: 500;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      color: var(--text-primary);
+    }
+    .hot-meta { 
+      font-size: 11px; 
+      color: var(--text-muted); 
+      margin-top: 2px;
+    }
+
+    .tag-cloud {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+    .tag-item {
+      padding: 5px 14px;
+      background: var(--bg-page);
+      border-radius: 16px;
+      font-size: 12px;
+      cursor: pointer;
+      transition: all 200ms;
+      color: var(--text-secondary);
+    }
+    .tag-item:hover { 
+      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+      color: white;
+      transform: translateY(-2px);
+    }
+
+    .modal-overlay {
       display: none;
       position: fixed;
       top: 0;
       left: 0;
-      width: 100%;
-      height: 100%;
+      right: 0;
+      bottom: 0;
       background: rgba(0,0,0,0.5);
-      justify-content: center;
-      align-items: center;
       z-index: 1000;
+      align-items: center;
+      justify-content: center;
       padding: 20px;
+      backdrop-filter: blur(5px);
     }
-    
-    .modal.show { display: flex; }
-    
-    .modal-content {
+    .modal-overlay.show { 
+      display: flex;
+      animation: fadeIn 200ms ease;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+    .modal {
       background: white;
-      border-radius: 8px;
-      padding: 30px;
+      border-radius: var(--radius-xl);
       width: 100%;
-      max-width: 500px;
+      max-width: 520px;
+      max-height: 90vh;
+      overflow-y: auto;
+      animation: slideUp 300ms ease;
     }
-    
+    @keyframes slideUp {
+      from { 
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to { 
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
     .modal-header {
+      padding: 16px 20px;
+      border-bottom: 1px solid var(--border);
       display: flex;
       justify-content: space-between;
       align-items: center;
+      position: sticky;
+      top: 0;
+      background: white;
+    }
+    .modal-title { 
+      font-size: 16px; 
+      font-weight: 600; 
+      color: var(--text-primary);
+    }
+    .modal-close {
+      background: none;
+      border: none;
+      font-size: 20px;
+      cursor: pointer;
+      color: var(--text-muted);
+      padding: 4px;
+      border-radius: 50%;
+      transition: all 200ms;
+    }
+    .modal-close:hover {
+      background: var(--bg-page);
+      color: var(--text-primary);
+    }
+    .modal-body { padding: 20px; }
+    .modal-footer {
+      padding: 14px 20px;
+      border-top: 1px solid var(--border);
+      display: flex;
+      justify-content: flex-end;
+      gap: 12px;
+    }
+
+    .form-group { margin-bottom: 16px; }
+    .form-label {
+      display: block;
+      font-size: 13px;
+      font-weight: 500;
+      margin-bottom: 6px;
+      color: var(--text-primary);
+    }
+    .form-input {
+      width: 100%;
+      padding: 11px 14px;
+      border: 2px solid var(--border);
+      border-radius: var(--radius);
+      font-size: 14px;
+      transition: all 200ms;
+    }
+    .form-input:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+    }
+    .form-textarea {
+      width: 100%;
+      padding: 11px 14px;
+      border: 2px solid var(--border);
+      border-radius: var(--radius);
+      font-size: 14px;
+      min-height: 90px;
+      resize: vertical;
+      transition: all 200ms;
+    }
+    .form-textarea:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+    }
+
+    .auth-tabs {
+      display: flex;
+      gap: 12px;
       margin-bottom: 20px;
     }
-    
-    .close { font-size: 28px; cursor: pointer; color: #999; }
-    
-    .form-group { margin-bottom: 20px; }
-    
-    .form-group label {
-      display: block;
-      margin-bottom: 8px;
+    .auth-tab {
+      padding: 8px 20px;
+      border: none;
+      background: transparent;
+      font-size: 14px;
       font-weight: 500;
+      cursor: pointer;
+      border-bottom: 2px solid transparent;
+      color: var(--text-secondary);
+      transition: all 200ms;
     }
-    
-    .form-group input,
-    .form-group textarea,
-    .form-group select {
-      width: 100%;
-      padding: 12px 16px;
-      border: 1px solid #ddd;
-      border-radius: 8px;
+    .auth-tab.active {
+      color: var(--primary);
+      border-bottom-color: var(--primary);
+    }
+
+    .notification {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      padding: 14px 22px;
+      border-radius: var(--radius);
+      color: white;
       font-size: 14px;
+      z-index: 2000;
+      animation: slideInRight 300ms ease;
+      box-shadow: var(--shadow-lg);
     }
-    
-    .form-actions {
+    .notification.success { 
+      background: linear-gradient(135deg, var(--secondary) 0%, #16a34a 100%); 
+    }
+    .notification.error { 
+      background: linear-gradient(135deg, var(--danger) 0%, #dc2626 100%); 
+    }
+    @keyframes slideInRight {
+      from { 
+        transform: translateX(100%); 
+        opacity: 0; 
+      }
+      to { 
+        transform: translateX(0); 
+        opacity: 1; 
+      }
+    }
+
+    .profile-tabs {
       display: flex;
-      gap: 12px;
-      justify-content: flex-end;
-    }
-    
-    .activity-detail {
-      background: white;
-      border-radius: 8px;
-      padding: 30px;
-      box-shadow: 0 4px 8px rgba(0,0,0,0.12);
-    }
-    
-    .activity-detail-header {
-      display: flex;
-      gap: 24px;
-      margin-bottom: 30px;
-    }
-    
-    .detail-image {
-      flex: 0 0 300px;
-      height: 200px;
-      border-radius: 8px;
-      overflow: hidden;
-    }
-    
-    .detail-image img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-    }
-    
-    .detail-header-content h2 {
-      font-size: 28px;
-      margin-bottom: 16px;
-    }
-    
-    .detail-meta {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 20px;
-      padding: 20px;
-      background: #f5f5f5;
-      border-radius: 8px;
-    }
-    
-    .detail-meta-item {
-      display: flex;
-      align-items: center;
       gap: 8px;
+      margin-bottom: 20px;
+      border-bottom: 1px solid var(--border);
+    }
+    .profile-tab {
+      padding: 8px 16px;
+      border: none;
+      background: transparent;
       font-size: 14px;
-      color: #666;
+      font-weight: 500;
+      cursor: pointer;
+      border-bottom: 2px solid transparent;
+      color: var(--text-secondary);
+      transition: all 200ms;
     }
-    
-    .detail-description {
-      margin: 24px 0;
-      font-size: 16px;
-      line-height: 1.6;
-      color: #666;
+    .profile-tab.active {
+      color: var(--primary);
+      border-bottom-color: var(--primary);
     }
-    
-    .detail-actions {
+
+    .empty-state {
+      text-align: center;
+      padding: 40px;
+      color: var(--text-muted);
+      font-size: 14px;
+    }
+
+    .comment-list {
       display: flex;
+      flex-direction: column;
       gap: 12px;
-      padding-top: 20px;
-      border-top: 1px solid #eee;
     }
-    
-    .comments-section {
-      margin-top: 40px;
-      padding-top: 30px;
-      border-top: 1px solid #eee;
-    }
-    
-    .comment-input {
-      width: 100%;
-      padding: 12px 16px;
-      border: 1px solid #ddd;
-      border-radius: 8px;
-      min-height: 100px;
-      margin-bottom: 12px;
-    }
-    
-    .comments-list { margin-top: 20px; }
-    
     .comment-item {
-      background: #f5f5f5;
-      padding: 16px;
-      border-radius: 8px;
-      margin-bottom: 12px;
+      padding: 14px;
+      background: var(--bg-page);
+      border-radius: var(--radius);
+      transition: all 200ms;
     }
-    
+    .comment-item:hover {
+      background: #f1f5f9;
+    }
     .comment-header {
       display: flex;
       justify-content: space-between;
       margin-bottom: 8px;
     }
-    
-    .comment-author { font-weight: 500; }
-    .comment-time { font-size: 12px; color: #999; }
-    
-    .notification {
-      position: fixed;
-      top: 20px;
-      right: 20px;
-      padding: 16px 20px;
-      border-radius: 8px;
+    .comment-author { 
+      font-size: 13px; 
+      font-weight: 600; 
+      color: var(--text-primary);
+    }
+    .comment-time { 
+      font-size: 11px; 
+      color: var(--text-muted); 
+    }
+    .comment-content { 
+      font-size: 13px; 
+      color: var(--text-secondary); 
+      line-height: 1.5;
+    }
+
+    .participant-list {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .participant-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px;
+      background: var(--bg-page);
+      border-radius: var(--radius);
+      transition: all 200ms;
+    }
+    .participant-item:hover {
+      background: #f1f5f9;
+    }
+    .participant-avatar {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
       color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      font-weight: 600;
+    }
+    .participant-name { 
+      font-size: 13px; 
+      color: var(--text-primary);
+    }
+
+    .share-options {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+      margin-top: 16px;
+    }
+    .share-btn {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      padding: 16px;
+      border: 2px solid var(--border);
+      border-radius: var(--radius);
+      background: white;
+      cursor: pointer;
+      transition: all 200ms;
+    }
+    .share-btn:hover {
+      border-color: var(--primary);
+      background: var(--primary-light);
+      transform: translateY(-2px);
+    }
+    .share-btn span { font-size: 24px; }
+    .share-btn label { 
+      font-size: 12px; 
+      color: var(--text-secondary); 
       font-weight: 500;
-      z-index: 1001;
-      animation: slideIn 0.3s;
-    }
-    
-    .notification-success { background: #4CAF50; }
-    .notification-error { background: #f44336; }
-    
-    @keyframes slideIn {
-      from { transform: translateX(100%); opacity: 0; }
-      to { transform: translateX(0); opacity: 1; }
-    }
-    
-    @media (max-width: 768px) {
-      .navbar .container { flex-direction: column; gap: 12px; }
-      .search-container { flex-direction: column; }
-      .activities-grid { grid-template-columns: 1fr; }
-      .activity-detail-header { flex-direction: column; }
-      .detail-image { flex: 0 0 200px; width: 100%; }
     }
   </style>
 </head>
 <body>
   <nav class="navbar">
-    <div class="container">
-      <h1>校园活动发布平台</h1>
-      <div style="display: flex; gap: 12px;">
-        <button class="btn btn-outline" onclick="showModal('authModal')">登录/注册</button>
-        <button class="btn btn-primary" onclick="showModal('publishModal')">发布活动</button>
+    <div class="inner">
+      <h1>🎓 校园活动平台</h1>
+      <div class="navbar-actions">
+        <span id="userGreeting" style="display: none; margin-right: 12px; font-size: 14px;">欢迎, <span id="currentUsername"></span></span>
+        <button class="btn btn-outline" onclick="showModal('authModal')" id="authBtn">登录/注册</button>
+        <button class="btn btn-primary" onclick="showModal('publishModal')">📝 发布活动</button>
+        <button class="btn btn-outline" onclick="showUserProfile()" id="profileBtn" style="display: none;">👤 个人中心</button>
       </div>
     </div>
   </nav>
 
-  <div class="container">
-    <div class="search-container">
-      <input type="text" id="searchInput" class="search-input" placeholder="搜索活动..." onkeyup="searchActivities()">
-      <select id="categoryFilter" class="filter-select" onchange="searchActivities()">
+  <div class="page">
+    <div class="hero-section">
+      <h2 class="hero-title">发现精彩校园活动</h2>
+      <p class="hero-desc">探索校园里的精彩活动，结识志同道合的伙伴</p>
+    </div>
+
+    <div class="search-area">
+      <input type="text" id="searchInput" class="search-box" placeholder="搜索活动名称、地点、标签...">
+      <select id="categoryFilter" class="filter-select">
         <option value="all">全部分类</option>
-        <option value="academic">学术活动</option>
-        <option value="cultural">文化活动</option>
-        <option value="sports">体育活动</option>
-        <option value="social">社交活动</option>
+        <option value="academic">学术</option>
+        <option value="cultural">文化</option>
+        <option value="sports">体育</option>
+        <option value="social">社交</option>
       </select>
-      <button class="btn btn-primary" onclick="searchActivities()">搜索</button>
+      <select id="statusFilter" class="filter-select">
+        <option value="all">全部状态</option>
+        <option value="upcoming">即将开始</option>
+        <option value="active">进行中</option>
+        <option value="ended">已结束</option>
+      </select>
+      <select id="sortSelect" class="filter-select">
+        <option value="newest">最新发布</option>
+        <option value="soonest">即将开始</option>
+      </select>
+      <button class="btn btn-primary" onclick="searchActivities()">🔍 搜索</button>
     </div>
 
-    <div id="activitiesContainer">
-      <h2 style="margin: 30px 0 20px; font-size: 24px;">最新活动</h2>
-      <div id="activitiesGrid" class="activities-grid"></div>
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-icon blue">📅</div>
+        <div>
+          <div class="stat-value" id="statTotal">0</div>
+          <div class="stat-label">总活动数</div>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon green">✅</div>
+        <div>
+          <div class="stat-value" id="statActive">0</div>
+          <div class="stat-label">进行中</div>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon orange">👥</div>
+        <div>
+          <div class="stat-value" id="statParticipants">0</div>
+          <div class="stat-label">报名人数</div>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon purple">💬</div>
+        <div>
+          <div class="stat-value" id="statComments">0</div>
+          <div class="stat-label">评论数</div>
+        </div>
+      </div>
     </div>
 
-    <div id="activityDetail" class="activity-detail" style="display: none;">
-      <button class="btn" onclick="showActivitiesList()">返回列表</button>
-      <div class="activity-detail-header">
-        <div class="detail-image" id="detailImage"></div>
-        <div class="detail-header-content">
-          <h2 id="detailTitle"></h2>
-          <div class="detail-meta" id="detailMeta"></div>
+    <div class="content-layout">
+      <div>
+        <div class="section-header">
+          <h2 class="section-title">✨ 最新活动</h2>
         </div>
-      </div>
-      <div class="detail-description" id="detailDescription"></div>
-      <div class="detail-actions">
-        <button class="btn btn-secondary" onclick="handleJoin()">报名参加</button>
-        <button class="btn" onclick="handleFavorite()">收藏</button>
-        <button class="btn" onclick="handleShare()">分享</button>
+        <div id="activitiesGrid" class="activities-list"></div>
       </div>
 
-      <div class="comments-section">
-        <h3 style="margin-bottom: 20px;">评论</h3>
-        <textarea class="comment-input" id="commentInput" placeholder="写下你的评论..."></textarea>
-        <button class="btn btn-primary" onclick="addComment()">发布评论</button>
-        <div class="comments-list" id="commentsList"></div>
-      </div>
-    </div>
-  </div>
-
-  <div id="authModal" class="modal">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h2>用户认证</h2>
-        <span class="close" onclick="hideModal('authModal')">&times;</span>
-      </div>
-      <div style="display: flex; border-bottom: 1px solid #eee; margin-bottom: 20px;">
-        <div style="flex: 1; padding: 12px; text-align: center; cursor: pointer;" onclick="switchAuthTab('login')" id="loginTab">登录</div>
-        <div style="flex: 1; padding: 12px; text-align: center; cursor: pointer;" onclick="switchAuthTab('register')" id="registerTab">注册</div>
-      </div>
-      <div id="loginPanel">
-        <div class="form-group">
-          <label>用户名</label>
-          <input type="text" id="loginUsername">
+      <div class="sidebar">
+        <div class="side-card">
+          <h3>🔥 热门活动</h3>
+          <div id="hotActivities" class="hot-list"></div>
         </div>
-        <div class="form-group">
-          <label>密码</label>
-          <input type="password" id="loginPassword">
+        <div class="side-card">
+          <h3>📅 即将开始</h3>
+          <div id="upcomingActivities" class="hot-list"></div>
         </div>
-        <div class="form-actions">
-          <button class="btn btn-primary" onclick="handleLogin()">登录</button>
-        </div>
-      </div>
-      <div id="registerPanel" style="display: none;">
-        <div class="form-group">
-          <label>用户名</label>
-          <input type="text" id="registerUsername">
-        </div>
-        <div class="form-group">
-          <label>邮箱</label>
-          <input type="email" id="registerEmail">
-        </div>
-        <div class="form-group">
-          <label>密码</label>
-          <input type="password" id="registerPassword">
-        </div>
-        <div class="form-actions">
-          <button class="btn btn-primary" onclick="handleRegister()">注册</button>
+        <div class="side-card">
+          <h3>🏷️ 热门标签</h3>
+          <div id="hotTags" class="tag-cloud"></div>
         </div>
       </div>
     </div>
   </div>
 
-  <div id="publishModal" class="modal">
-    <div class="modal-content">
+  <div id="authModal" class="modal-overlay">
+    <div class="modal">
       <div class="modal-header">
-        <h2>发布活动</h2>
-        <span class="close" onclick="hideModal('publishModal')">&times;</span>
+        <span class="modal-title">登录/注册</span>
+        <button class="modal-close" onclick="hideModal('authModal')">×</button>
       </div>
-      <div class="form-group">
-        <label>活动标题</label>
-        <input type="text" id="publishTitle">
+      <div class="modal-body">
+        <div class="auth-tabs">
+          <button class="auth-tab active" onclick="switchAuthTab('login')">登录</button>
+          <button class="auth-tab" onclick="switchAuthTab('register')">注册</button>
+        </div>
+        <div id="loginPanel">
+          <div class="form-group">
+            <label class="form-label">用户名</label>
+            <input type="text" id="loginUsername" class="form-input" placeholder="请输入用户名">
+          </div>
+          <div class="form-group">
+            <label class="form-label">密码</label>
+            <input type="password" id="loginPassword" class="form-input" placeholder="请输入密码">
+          </div>
+          <button class="btn btn-primary" style="width: 100%;" onclick="handleLogin()">登录</button>
+        </div>
+        <div id="registerPanel" style="display: none;">
+          <div class="form-group">
+            <label class="form-label">用户名</label>
+            <input type="text" id="registerUsername" class="form-input" placeholder="请输入用户名">
+          </div>
+          <div class="form-group">
+            <label class="form-label">邮箱</label>
+            <input type="email" id="registerEmail" class="form-input" placeholder="请输入邮箱">
+          </div>
+          <div class="form-group">
+            <label class="form-label">密码</label>
+            <input type="password" id="registerPassword" class="form-input" placeholder="请输入密码">
+          </div>
+          <button class="btn btn-primary" style="width: 100%;" onclick="handleRegister()">注册</button>
+        </div>
       </div>
-      <div class="form-group">
-        <label>活动描述</label>
-        <textarea id="publishDescription"></textarea>
+    </div>
+  </div>
+
+  <div id="publishModal" class="modal-overlay">
+    <div class="modal">
+      <div class="modal-header">
+        <span class="modal-title" id="publishTitle">发布活动</span>
+        <button class="modal-close" onclick="hideModal('publishModal')">×</button>
       </div>
-      <div class="form-group">
-        <label>活动时间</label>
-        <input type="datetime-local" id="publishTime">
+      <div class="modal-body">
+        <input type="hidden" id="editActivityId">
+        <div class="form-group">
+          <label class="form-label">活动标题</label>
+          <input type="text" id="activityTitle" class="form-input" placeholder="请输入活动标题">
+        </div>
+        <div class="form-group">
+          <label class="form-label">活动分类</label>
+          <select id="activityCategory" class="form-input">
+            <option value="academic">学术活动</option>
+            <option value="cultural">文化活动</option>
+            <option value="sports">体育活动</option>
+            <option value="social">社交活动</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">活动标签（逗号分隔）</label>
+          <input type="text" id="activityTags" class="form-input" placeholder="例如：讲座, 分享会">
+        </div>
+        <div class="form-group">
+          <label class="form-label">活动时间</label>
+          <input type="datetime-local" id="activityTime" class="form-input">
+        </div>
+        <div class="form-group">
+          <label class="form-label">活动地点</label>
+          <input type="text" id="activityLocation" class="form-input" placeholder="请输入活动地点">
+        </div>
+        <div class="form-group">
+          <label class="form-label">活动描述</label>
+          <textarea id="activityDescription" class="form-textarea" placeholder="请输入活动描述"></textarea>
+        </div>
+        <div class="form-group">
+          <label class="form-label">活动图片（可选）</label>
+          <input type="text" id="activityImage" class="form-input" placeholder="图片URL">
+        </div>
       </div>
-      <div class="form-group">
-        <label>活动地点</label>
-        <input type="text" id="publishLocation">
-      </div>
-      <div class="form-group">
-        <label>活动分类</label>
-        <select id="publishCategory">
-          <option value="academic">学术活动</option>
-          <option value="cultural">文化活动</option>
-          <option value="sports">体育活动</option>
-          <option value="social">社交活动</option>
-        </select>
-      </div>
-      <div class="form-group">
-        <label>发布者</label>
-        <input type="text" id="publishPublisher">
-      </div>
-      <div class="form-actions">
-        <button class="btn" onclick="hideModal('publishModal')">取消</button>
+      <div class="modal-footer">
+        <button class="btn btn-outline" onclick="hideModal('publishModal')">取消</button>
         <button class="btn btn-primary" onclick="handlePublish()">发布</button>
       </div>
     </div>
   </div>
 
+  <div id="detailModal" class="modal-overlay">
+    <div class="modal" style="max-width: 600px;">
+      <div class="modal-header">
+        <span class="modal-title">活动详情</span>
+        <button class="modal-close" onclick="hideModal('detailModal')">×</button>
+      </div>
+      <div class="modal-body" id="activityDetailContent"></div>
+    </div>
+  </div>
+
+  <div id="profileModal" class="modal-overlay">
+    <div class="modal" style="max-width: 800px;">
+      <div class="modal-header">
+        <span class="modal-title">个人中心</span>
+        <button class="modal-close" onclick="hideModal('profileModal')">×</button>
+      </div>
+      <div class="modal-body">
+        <div class="profile-tabs">
+          <button class="profile-tab active" onclick="showProfileTab('registered')">已报名</button>
+          <button class="profile-tab" onclick="showProfileTab('favorites')">收藏</button>
+          <button class="profile-tab" onclick="showProfileTab('reminders')">提醒</button>
+          <button class="profile-tab" onclick="showProfileTab('myActivities')">我的活动</button>
+        </div>
+        <div id="profileContent"></div>
+      </div>
+    </div>
+  </div>
+
+  <div id="shareModal" class="modal-overlay">
+    <div class="modal" style="max-width: 400px;">
+      <div class="modal-header">
+        <span class="modal-title">分享活动</span>
+        <button class="modal-close" onclick="hideModal('shareModal')">×</button>
+      </div>
+      <div class="modal-body">
+        <div id="shareActivityTitle" style="font-weight: 600; margin-bottom: 16px; font-size: 15px;"></div>
+        <div class="share-options">
+          <button class="share-btn" onclick="shareTo('wechat')"><span>💬</span><label>微信</label></button>
+          <button class="share-btn" onclick="shareTo('qq')"><span>🐧</span><label>QQ</label></button>
+          <button class="share-btn" onclick="shareTo('weibo')"><span>📱</span><label>微博</label></button>
+          <button class="share-btn" onclick="copyLink()"><span>🔗</span><label>复制链接</label></button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="participantsModal" class="modal-overlay">
+    <div class="modal" style="max-width: 500px;">
+      <div class="modal-header">
+        <span class="modal-title">报名人员</span>
+        <button class="modal-close" onclick="hideModal('participantsModal')">×</button>
+      </div>
+      <div class="modal-body">
+        <div id="participantsList"></div>
+      </div>
+    </div>
+  </div>
+
   <script>
-    let activities = [
-      {
-        id: 1,
-        title: '编程大赛',
-        description: '校园编程大赛，面向全校学生，展示编程技能，赢取丰厚奖品。',
-        time: '2026-05-10T14:00',
-        location: '科技楼301教室',
-        category: 'academic',
-        publisher: '计算机协会',
-        image: 'https://picsum.photos/400/225?random=1',
-        comments: [
-          { id: 1, author: '张三', content: '这个比赛很有意思！', time: '2026-04-20T10:00' }
-        ]
-      },
-      {
-        id: 2,
-        title: '校园音乐节',
-        description: '校园音乐节，邀请校内外乐队演出，享受音乐盛宴。',
-        time: '2026-05-15T18:00',
-        location: '露天剧场',
-        category: 'cultural',
-        publisher: '文艺部',
-        image: 'https://picsum.photos/400/225?random=2',
-        comments: []
-      },
-      {
-        id: 3,
-        title: '篮球比赛',
-        description: '学院篮球比赛，各系组队参赛，争夺冠军奖杯。',
-        time: '2026-05-08T16:00',
-        location: '体育馆',
-        category: 'sports',
-        publisher: '体育部',
-        image: 'https://picsum.photos/400/225?random=3',
-        comments: []
-      },
-      {
-        id: 4,
-        title: '新生见面会',
-        description: '为新生举办的见面会，帮助新生熟悉校园环境，认识同学。',
-        time: '2026-05-01T10:00',
-        location: '多功能厅',
-        category: 'social',
-        publisher: '学生会',
-        image: 'https://picsum.photos/400/225?random=4',
-        comments: []
-      }
-    ]
+    let isLoggedIn = false;
+    let currentUser = null;
+    let activities = [];
+    let currentActivity = null;
 
-    let currentActivity = null
-    let isLoggedIn = false
-    let currentUser = null
-    let currentId = 5
+    const mockActivities = [
+      { id: 1, title: '人工智能学术讲座', category: 'academic', tags: ['AI', '讲座', '学术'], time: new Date(Date.now() + 86400000).toISOString(), location: '学术报告厅', description: '邀请知名AI专家分享最新研究成果，探讨人工智能未来发展趋势。', image: 'https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=artificial%20intelligence%20technology%20abstract%20digital%20brain%20neural%20network%20blue%20purple%20gradient&image_size=landscape_4_3', participants: ['user1', 'user2'], comments: [{ author: 'user1', content: '期待！', time: new Date().toISOString() }], publisher: '学术部', createdAt: new Date(Date.now() - 86400000).toISOString() },
+      { id: 2, title: '校园音乐节', category: 'cultural', tags: ['音乐', '演出', '校园'], time: new Date(Date.now() + 172800000).toISOString(), location: '体育馆', description: '年度校园音乐盛典，汇聚校园乐队和歌手，带来震撼的视听体验。', image: 'https://images.unsplash.com/photo-1511379938547-c1f69419868d?w=600', participants: [], comments: [], publisher: '学生会', createdAt: new Date(Date.now() - 172800000).toISOString() },
+      { id: 3, title: '篮球友谊赛', category: 'sports', tags: ['篮球', '比赛', '运动'], time: new Date(Date.now() + 259200000).toISOString(), location: '篮球场', description: '各学院篮球队之间的友谊赛，展现青春活力。', image: 'https://images.unsplash.com/photo-1546519638-68e109498ffc?w=600', participants: ['user3'], comments: [], publisher: '体育部', createdAt: new Date(Date.now() - 259200000).toISOString() },
+      { id: 4, title: '读书会分享会', category: 'social', tags: ['阅读', '分享', '交流'], time: new Date(Date.now() + 43200000).toISOString(), location: '图书馆会议室', description: '每周读书会，分享阅读心得，结交志同道合的朋友。', image: 'https://images.unsplash.com/photo-1507842217343-583bb7270b66?w=600', participants: ['user1', 'user4', 'user5'], comments: [{ author: 'user4', content: '好书推荐！', time: new Date().toISOString() }], publisher: '读书会', createdAt: new Date(Date.now() - 43200000).toISOString() },
+      { id: 5, title: '创业分享沙龙', category: 'academic', tags: ['创业', '分享', '职场'], time: new Date(Date.now() + 345600000).toISOString(), location: '创业孵化中心', description: '邀请成功创业者分享创业经验，为在校学生提供创业指导。', image: 'https://images.unsplash.com/photo-1504384308090-c894fdcc538d?w=600', participants: [], comments: [], publisher: '创业协会', createdAt: new Date(Date.now() - 345600000).toISOString() },
+      { id: 6, title: '校园戏剧节', category: 'cultural', tags: ['戏剧', '表演', '艺术'], time: new Date(Date.now() + 518400000).toISOString(), location: '大学生活动中心', description: '精彩的校园戏剧演出，展现学生的艺术才华。', image: 'https://images.unsplash.com/photo-1507924538820-ede94a04019d?w=600', participants: ['user2', 'user6'], comments: [], publisher: '戏剧社', createdAt: new Date(Date.now() - 518400000).toISOString() },
+    ];
 
-    const categories = {
-      academic: '学术活动',
-      cultural: '文化活动',
-      sports: '体育活动',
-      social: '社交活动'
+    const categoryIcons = { academic: '📚', cultural: '🎭', sports: '⚽', social: '👫' };
+    const favorites = [];
+    const reminders = [];
+
+    function init() {
+      activities = [...mockActivities];
+      renderActivities();
+      updateStats();
+      renderHotActivities();
+      renderUpcomingActivities();
+      renderHotTags();
     }
 
-    function formatDateTime(dateTimeString) {
-      const date = new Date(dateTimeString)
-      return date.toLocaleString('zh-CN')
+    function renderActivities(filteredActivities = activities) {
+      const container = document.getElementById('activitiesGrid');
+      if (filteredActivities.length === 0) {
+        container.innerHTML = '<div class="empty-state">暂无活动</div>';
+        return;
+      }
+      container.innerHTML = filteredActivities.map(activity => `
+        <div class="activity-card" onclick="showActivityDetail(${activity.id})">
+          <div class="activity-cover">
+            ${activity.image ? `<img src="${activity.image}" alt="${activity.title}">` : `<span class="placeholder">${categoryIcons[activity.category] || '📋'}</span>`}
+            <span class="activity-badge badge-${getActivityStatus(activity)}">${getStatusText(activity)}</span>
+          </div>
+          <div class="activity-body">
+            <div class="activity-title">${activity.title}</div>
+            <div class="activity-desc">${activity.description}</div>
+            <div class="activity-tags">
+              ${activity.tags.map(tag => `<span class="activity-tag">${tag}</span>`).join('')}
+            </div>
+            <div class="activity-info"><span>📅</span>${formatDateTime(activity.time)}</div>
+            <div class="activity-info"><span>📍</span>${activity.location}</div>
+            <div class="activity-footer">
+              <span class="activity-cat cat-${activity.category}">${getCategoryText(activity.category)}</span>
+              <span style="font-size: 11px; color: var(--text-muted);">👤 ${activity.publisher}</span>
+            </div>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function getActivityStatus(activity) {
+      const now = new Date();
+      const activityTime = new Date(activity.time);
+      if (activityTime > now) return 'upcoming';
+      const threeHoursLater = new Date(now.getTime() + 3 * 60 * 60 * 1000);
+      return activityTime > threeHoursLater ? 'active' : 'ended';
+    }
+
+    function getStatusText(activity) {
+      const status = getActivityStatus(activity);
+      return status === 'upcoming' ? '即将开始' : status === 'active' ? '进行中' : '已结束';
     }
 
     function getCategoryText(category) {
-      return categories[category] || category
+      const map = { academic: '学术', cultural: '文化', sports: '体育', social: '社交' };
+      return map[category] || category;
     }
 
-    function showNotification(message, type = 'success') {
-      const notification = document.createElement('div')
-      notification.className = `notification notification-${type}`
-      notification.textContent = message
-      document.body.appendChild(notification)
-      setTimeout(() => notification.remove(), 3000)
-    }
-
-    function renderActivities(list = activities) {
-      const grid = document.getElementById('activitiesGrid')
-      if (list.length === 0) {
-        grid.innerHTML = '<p style="grid-column: 1/-1; text-align: center; padding: 40px;">没有找到活动</p>'
-        return
-      }
-      grid.innerHTML = list.map(activity => `
-        <div class="activity-card" onclick="showActivityDetail(${activity.id})">
-          <div class="activity-image">
-            <img src="${activity.image}" alt="${activity.title}">
-          </div>
-          <div class="activity-content">
-            <h3>${activity.title}</h3>
-            <p>${activity.description}</p>
-            <div class="activity-info-item">
-              <span>📅</span>
-              <span>${formatDateTime(activity.time)}</span>
-            </div>
-            <div class="activity-info-item">
-              <span>📍</span>
-              <span>${activity.location}</span>
-            </div>
-            <div class="activity-meta">
-              <span class="activity-category category-${activity.category}">${getCategoryText(activity.category)}</span>
-              <span class="activity-publisher">${activity.publisher}</span>
-            </div>
-          </div>
-        </div>
-      `).join('')
+    function formatDateTime(dateStr) {
+      const date = new Date(dateStr);
+      return date.toLocaleString('zh-CN', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' });
     }
 
     function showActivityDetail(id) {
-      currentActivity = activities.find(a => a.id === id)
-      if (!currentActivity) return
+      currentActivity = activities.find(a => a.id === id);
+      if (!currentActivity) return;
 
-      document.getElementById('detailTitle').textContent = currentActivity.title
-      document.getElementById('detailDescription').textContent = currentActivity.description
-      document.getElementById('detailImage').innerHTML = `<img src="${currentActivity.image}" alt="${currentActivity.title}">`
-      document.getElementById('detailMeta').innerHTML = `
-        <div class="detail-meta-item"><span>📅</span><span>${formatDateTime(currentActivity.time)}</span></div>
-        <div class="detail-meta-item"><span>📍</span><span>${currentActivity.location}</span></div>
-        <div class="detail-meta-item"><span>🏷️</span><span>${getCategoryText(currentActivity.category)}</span></div>
-        <div class="detail-meta-item"><span>👤</span><span>${currentActivity.publisher}</span></div>
-      `
+      const isRegistered = currentActivity.participants.includes(currentUser?.username);
+      const isFavorite = favorites.includes(id);
+      const hasReminder = reminders.includes(id);
+      const isPublisher = currentUser?.username === currentActivity.publisher;
 
-      renderComments(currentActivity.comments)
-
-      document.getElementById('activitiesContainer').style.display = 'none'
-      document.getElementById('activityDetail').style.display = 'block'
-    }
-
-    function showActivitiesList() {
-      document.getElementById('activityDetail').style.display = 'none'
-      document.getElementById('activitiesContainer').style.display = 'block'
-      currentActivity = null
-    }
-
-    function renderComments(comments) {
-      const list = document.getElementById('commentsList')
-      if (comments.length === 0) {
-        list.innerHTML = '<p style="text-align: center; padding: 20px; color: #999;">暂无评论</p>'
-        return
-      }
-      list.innerHTML = comments.map(comment => `
-        <div class="comment-item">
-          <div class="comment-header">
-            <span class="comment-author">${comment.author}</span>
-            <span class="comment-time">${formatDateTime(comment.time)}</span>
+      document.getElementById('activityDetailContent').innerHTML = `
+        <div style="margin-bottom: 16px;">
+          <div class="activity-cover" style="border-radius: 12px; margin-bottom: 12px;">
+            ${currentActivity.image ? `<img src="${currentActivity.image}" alt="${currentActivity.title}">` : `<span class="placeholder">${categoryIcons[currentActivity.category] || '📋'}</span>`}
           </div>
-          <p>${comment.content}</p>
+          <h2 style="font-size: 18px; font-weight: 600; margin-bottom: 8px;">${currentActivity.title}</h2>
+          <div class="activity-tags">
+            ${currentActivity.tags.map(tag => `<span class="activity-tag">${tag}</span>`).join('')}
+          </div>
         </div>
-      `).join('')
+        <div style="margin-bottom: 16px; padding: 12px; background: var(--bg-page); border-radius: 10px;">
+          <div class="activity-info"><span>📅</span><span>${formatDateTime(currentActivity.time)}</span></div>
+          <div class="activity-info"><span>📍</span><span>${currentActivity.location}</span></div>
+          <div class="activity-info"><span>👤</span><span>发布者：${currentActivity.publisher}</span></div>
+          <div class="activity-info"><span>👥</span><span>报名人数：${currentActivity.participants.length}人</span></div>
+        </div>
+        <div style="margin-bottom: 16px;">
+          <p style="font-size: 14px; color: var(--text-secondary); line-height: 1.6;">${currentActivity.description}</p>
+        </div>
+        <div style="display: flex; gap: 8px; margin-bottom: 20px; flex-wrap: wrap;">
+          ${isLoggedIn ? `
+            <button class="btn ${isRegistered ? 'btn-outline' : 'btn-primary'}" onclick="handleRegisterActivity(${currentActivity.id})">
+              ${isRegistered ? '取消报名' : '报名参加'}
+            </button>
+            <button class="btn btn-outline" onclick="${isFavorite ? 'removeFavorite' : 'addFavorite'}(${currentActivity.id})">
+              ${isFavorite ? '❤️ 已收藏' : '🤍 收藏'}
+            </button>
+            <button class="btn btn-outline" onclick="${hasReminder ? 'removeReminder' : 'setReminder'}(${currentActivity.id})">
+              ${hasReminder ? '🔔 已提醒' : '🔕 设置提醒'}
+            </button>
+          ` : ''}
+          <button class="btn btn-outline" onclick="showShareModal(${currentActivity.id})">📤 分享</button>
+          <button class="btn btn-outline" onclick="showParticipants(${currentActivity.id})">👥 查看报名</button>
+          ${isPublisher ? `
+            <button class="btn btn-outline" onclick="editActivity(${currentActivity.id})">✏️ 编辑</button>
+            <button class="btn btn-danger btn-sm" onclick="handleDeleteActivity(${currentActivity.id})">🗑️ 删除</button>
+          ` : ''}
+        </div>
+        <div>
+          <h3 style="font-size: 14px; font-weight: 600; margin-bottom: 12px;">💬 评论 (${currentActivity.comments.length})</h3>
+          <div class="comment-list">
+            ${currentActivity.comments.length === 0 ? '<div class="empty-state" style="padding: 15px;">暂无评论，快来发表第一条评论吧！</div>' : ''}
+            ${currentActivity.comments.map(comment => `
+              <div class="comment-item">
+                <div class="comment-header">
+                  <span class="comment-author">${comment.author}</span>
+                  <span class="comment-time">${formatDateTime(comment.time)}</span>
+                </div>
+                <div class="comment-content">${comment.content}</div>
+              </div>
+            `).join('')}
+          </div>
+          ${isLoggedIn ? `
+            <div style="margin-top: 16px;">
+              <textarea id="commentInput" class="form-textarea" placeholder="发表评论..."></textarea>
+              <button class="btn btn-primary" style="margin-top: 8px;" onclick="submitComment(${currentActivity.id})">发表评论</button>
+            </div>
+          ` : ''}
+        </div>
+      `;
+      showModal('detailModal');
     }
 
     function searchActivities() {
-      const query = document.getElementById('searchInput').value.toLowerCase()
-      const category = document.getElementById('categoryFilter').value
-      const filtered = activities.filter(a => {
-        const matchSearch = a.title.toLowerCase().includes(query) || a.description.toLowerCase().includes(query)
-        const matchCategory = category === 'all' || a.category === category
-        return matchSearch && matchCategory
-      })
-      renderActivities(filtered)
+      const keyword = document.getElementById('searchInput').value.toLowerCase();
+      const category = document.getElementById('categoryFilter').value;
+      const status = document.getElementById('statusFilter').value;
+      const sortBy = document.getElementById('sortSelect').value;
+
+      let filtered = activities.filter(activity => {
+        const matchKeyword = activity.title.toLowerCase().includes(keyword) || activity.description.toLowerCase().includes(keyword);
+        const matchCategory = category === 'all' || activity.category === category;
+        const matchStatus = status === 'all' || getActivityStatus(activity) === status;
+        return matchKeyword && matchCategory && matchStatus;
+      });
+
+      filtered.sort((a, b) => {
+        const timeA = new Date(a.time).getTime();
+        const timeB = new Date(b.time).getTime();
+        const createdA = new Date(a.createdAt).getTime();
+        const createdB = new Date(b.createdAt).getTime();
+        if (sortBy === 'newest') return (createdB || timeB) - (createdA || timeA);
+        return timeA - timeB;
+      });
+
+      renderActivities(filtered);
     }
 
+    document.getElementById('searchInput').addEventListener('keyup', function(e) {
+      if (e.key === 'Enter') searchActivities();
+    });
+
     function showModal(id) {
-      document.getElementById(id).classList.add('show')
+      document.getElementById(id).classList.add('show');
     }
 
     function hideModal(id) {
-      document.getElementById(id).classList.remove('show')
+      document.getElementById(id).classList.remove('show');
     }
 
     function switchAuthTab(tab) {
-      document.getElementById('loginPanel').style.display = tab === 'login' ? 'block' : 'none'
-      document.getElementById('registerPanel').style.display = tab === 'register' ? 'block' : 'none'
+      document.getElementById('loginPanel').style.display = tab === 'login' ? 'block' : 'none';
+      document.getElementById('registerPanel').style.display = tab === 'register' ? 'block' : 'none';
+      document.querySelectorAll('.auth-tab').forEach(t => t.classList.remove('active'));
+      event.target.classList.add('active');
     }
 
     function handleLogin() {
-      const username = document.getElementById('loginUsername').value
-      const password = document.getElementById('loginPassword').value
+      const username = document.getElementById('loginUsername').value;
+      const password = document.getElementById('loginPassword').value;
       if (!username || !password) {
-        showNotification('请输入用户名和密码', 'error')
-        return
+        showNotification('请输入用户名和密码', 'error');
+        return;
       }
-      isLoggedIn = true
-      currentUser = username
-      hideModal('authModal')
-      showNotification('登录成功')
+      isLoggedIn = true;
+      currentUser = { username, email: username + '@example.com' };
+      hideModal('authModal');
+      updateUIAfterLogin();
+      showNotification('登录成功！');
     }
 
     function handleRegister() {
-      const username = document.getElementById('registerUsername').value
-      const email = document.getElementById('registerEmail').value
-      const password = document.getElementById('registerPassword').value
+      const username = document.getElementById('registerUsername').value;
+      const email = document.getElementById('registerEmail').value;
+      const password = document.getElementById('registerPassword').value;
       if (!username || !email || !password) {
-        showNotification('请填写所有字段', 'error')
-        return
+        showNotification('请填写完整信息', 'error');
+        return;
       }
-      isLoggedIn = true
-      currentUser = username
-      hideModal('authModal')
-      showNotification('注册成功')
+      isLoggedIn = true;
+      currentUser = { username, email };
+      hideModal('authModal');
+      updateUIAfterLogin();
+      showNotification('注册成功！');
+    }
+
+    function updateUIAfterLogin() {
+      document.getElementById('userGreeting').style.display = 'inline';
+      document.getElementById('currentUsername').textContent = currentUser.username;
+      document.getElementById('authBtn').style.display = 'none';
+      document.getElementById('profileBtn').style.display = 'inline-flex';
+    }
+
+    function showNotification(message, type = 'success') {
+      const notification = document.createElement('div');
+      notification.className = `notification ${type}`;
+      notification.textContent = message;
+      document.body.appendChild(notification);
+      setTimeout(() => notification.remove(), 3000);
     }
 
     function handlePublish() {
-      const title = document.getElementById('publishTitle').value
-      const description = document.getElementById('publishDescription').value
-      const time = document.getElementById('publishTime').value
-      const location = document.getElementById('publishLocation').value
-      const category = document.getElementById('publishCategory').value
-      const publisher = document.getElementById('publishPublisher').value
+      const id = document.getElementById('editActivityId').value;
+      const title = document.getElementById('activityTitle').value;
+      const category = document.getElementById('activityCategory').value;
+      const tags = document.getElementById('activityTags').value.split(',').map(t => t.trim()).filter(Boolean);
+      const time = document.getElementById('activityTime').value;
+      const location = document.getElementById('activityLocation').value;
+      const description = document.getElementById('activityDescription').value;
+      const image = document.getElementById('activityImage').value;
 
-      if (!title || !description || !time || !location || !publisher) {
-        showNotification('请填写所有字段', 'error')
-        return
+      if (!title || !time || !location || !description) {
+        showNotification('请填写必填项', 'error');
+        return;
       }
 
-      activities.unshift({
-        id: currentId++,
-        title,
-        description,
-        time,
-        location,
-        category,
-        publisher,
-        image: `https://picsum.photos/400/225?random=${currentId}`,
-        comments: []
-      })
+      if (id) {
+        const index = activities.findIndex(a => a.id === parseInt(id));
+        if (index !== -1) {
+          activities[index] = { ...activities[index], title, category, tags, time, location, description, image };
+          showNotification('活动更新成功！');
+        }
+      } else {
+        const newActivity = {
+          id: Date.now(),
+          title,
+          category,
+          tags,
+          time: new Date(time).toISOString(),
+          location,
+          description,
+          image: image || '',
+          participants: [],
+          comments: [],
+          publisher: currentUser?.username || '匿名',
+          createdAt: new Date().toISOString()
+        };
+        activities.unshift(newActivity);
+        showNotification('活动发布成功！');
+      }
 
-      renderActivities()
-      hideModal('publishModal')
-      showNotification('活动发布成功')
+      hideModal('publishModal');
+      document.getElementById('editActivityId').value = '';
+      document.getElementById('activityTitle').value = '';
+      document.getElementById('activityCategory').value = 'academic';
+      document.getElementById('activityTags').value = '';
+      document.getElementById('activityTime').value = '';
+      document.getElementById('activityLocation').value = '';
+      document.getElementById('activityDescription').value = '';
+      document.getElementById('activityImage').value = '';
+      document.getElementById('publishTitle').textContent = '发布活动';
+
+      renderActivities();
+      updateStats();
+      renderHotActivities();
+      renderUpcomingActivities();
+      renderHotTags();
     }
 
-    function handleJoin() {
+    function editActivity(id) {
+      const activity = activities.find(a => a.id === id);
+      if (!activity) return;
+
+      document.getElementById('editActivityId').value = id;
+      document.getElementById('activityTitle').value = activity.title;
+      document.getElementById('activityCategory').value = activity.category;
+      document.getElementById('activityTags').value = activity.tags.join(', ');
+      document.getElementById('activityTime').value = activity.time.slice(0, 16);
+      document.getElementById('activityLocation').value = activity.location;
+      document.getElementById('activityDescription').value = activity.description;
+      document.getElementById('activityImage').value = activity.image;
+      document.getElementById('publishTitle').textContent = '编辑活动';
+
+      hideModal('detailModal');
+      showModal('publishModal');
+    }
+
+    function handleDeleteActivity(id) {
+      if (confirm('确定要删除这个活动吗？')) {
+        activities = activities.filter(a => a.id !== id);
+        hideModal('detailModal');
+        showNotification('活动已删除');
+        renderActivities();
+        updateStats();
+        renderHotActivities();
+        renderUpcomingActivities();
+      }
+    }
+
+    function handleRegisterActivity(id) {
       if (!isLoggedIn) {
-        showNotification('请先登录', 'error')
-        showModal('authModal')
-        return
+        showNotification('请先登录', 'error');
+        showModal('authModal');
+        return;
       }
-      showNotification('报名成功')
+
+      const activity = activities.find(a => a.id === id);
+      if (!activity) return;
+
+      const index = activity.participants.indexOf(currentUser.username);
+      if (index === -1) {
+        activity.participants.push(currentUser.username);
+        showNotification('报名成功！');
+      } else {
+        activity.participants.splice(index, 1);
+        showNotification('已取消报名');
+      }
+
+      updateStats();
+      if (currentActivity?.id === id) showActivityDetail(id);
     }
 
-    function handleFavorite() {
-      if (!isLoggedIn) {
-        showNotification('请先登录', 'error')
-        showModal('authModal')
-        return
+    function addFavorite(id) {
+      if (!favorites.includes(id)) {
+        favorites.push(id);
+        showNotification('已添加收藏');
       }
-      showNotification('收藏成功')
+      if (currentActivity?.id === id) showActivityDetail(id);
     }
 
-    function handleShare() {
-      navigator.clipboard.writeText(window.location.href).then(() => {
-        showNotification('链接已复制')
-      })
+    function removeFavorite(id) {
+      const index = favorites.indexOf(id);
+      if (index !== -1) {
+        favorites.splice(index, 1);
+        showNotification('已取消收藏');
+      }
+      if (currentActivity?.id === id) showActivityDetail(id);
     }
 
-    function addComment() {
-      if (!isLoggedIn) {
-        showNotification('请先登录', 'error')
-        showModal('authModal')
-        return
+    function setReminder(id) {
+      if (!reminders.includes(id)) {
+        reminders.push(id);
+        showNotification('已设置提醒，活动开始前将通知您');
       }
-      const content = document.getElementById('commentInput').value.trim()
+      if (currentActivity?.id === id) showActivityDetail(id);
+    }
+
+    function removeReminder(id) {
+      const index = reminders.indexOf(id);
+      if (index !== -1) {
+        reminders.splice(index, 1);
+        showNotification('已取消提醒');
+      }
+      if (currentActivity?.id === id) showActivityDetail(id);
+    }
+
+    function showShareModal(id) {
+      const activity = activities.find(a => a.id === id);
+      if (activity) {
+        document.getElementById('shareActivityTitle').textContent = activity.title;
+        showModal('shareModal');
+      }
+    }
+
+    function shareTo(platform) {
+      const texts = { wechat: '微信分享', qq: 'QQ分享', weibo: '微博分享' };
+      showNotification(`${texts[platform]}已触发`);
+      hideModal('shareModal');
+    }
+
+    function copyLink() {
+      navigator.clipboard.writeText(window.location.href);
+      showNotification('链接已复制到剪贴板');
+      hideModal('shareModal');
+    }
+
+    function showParticipants(id) {
+      const activity = activities.find(a => a.id === id);
+      if (!activity) return;
+
+      if (activity.participants.length === 0) {
+        document.getElementById('participantsList').innerHTML = '<div class="empty-state" style="padding: 15px;">暂无报名人员</div>';
+      } else {
+        document.getElementById('participantsList').innerHTML = `
+          <div class="participant-list">
+            ${activity.participants.map(user => `
+              <div class="participant-item">
+                <div class="participant-avatar">${user.charAt(0).toUpperCase()}</div>
+                <span class="participant-name">${user}</span>
+              </div>
+            `).join('')}
+          </div>
+        `;
+      }
+      showModal('participantsModal');
+    }
+
+    function submitComment(id) {
+      const content = document.getElementById('commentInput').value.trim();
       if (!content) {
-        showNotification('请输入评论内容', 'error')
-        return
+        showNotification('请输入评论内容', 'error');
+        return;
       }
-      currentActivity.comments.push({
-        id: Date.now(),
-        author: currentUser,
-        content,
-        time: new Date().toISOString()
-      })
-      renderComments(currentActivity.comments)
-      document.getElementById('commentInput').value = ''
-      showNotification('评论发布成功')
+
+      const activity = activities.find(a => a.id === id);
+      if (activity) {
+        activity.comments.push({ author: currentUser.username, content, time: new Date().toISOString() });
+        document.getElementById('commentInput').value = '';
+        showNotification('评论发布成功！');
+        showActivityDetail(id);
+        updateStats();
+      }
+    }
+
+    function showUserProfile() {
+      showProfileTab('registered');
+      showModal('profileModal');
+    }
+
+    function showProfileTab(tab) {
+      const content = document.getElementById('profileContent');
+      
+      const renderActivityCard = (a) => `
+        <div class="activity-card" style="cursor: pointer;" onclick="showActivityDetail(${a.id}); hideModal('profileModal')">
+          <div class="activity-cover">
+            ${a.image ? `<img src="${a.image}" alt="${a.title}">` : `<span class="placeholder">${categoryIcons[a.category] || '📋'}</span>`}
+            <span class="activity-badge badge-${getActivityStatus(a)}">${getStatusText(a)}</span>
+          </div>
+          <div class="activity-body">
+            <div class="activity-title">${a.title}</div>
+            <div class="activity-info"><span>📅</span>${formatDateTime(a.time)}</div>
+            <div class="activity-info"><span>📍</span>${a.location}</div>
+          </div>
+        </div>
+      `;
+
+      if (tab === 'registered') {
+        const registeredActivities = activities.filter(a => a.participants.includes(currentUser.username));
+        content.innerHTML = registeredActivities.length === 0 
+          ? '<div class="empty-state">暂无报名活动</div>'
+          : registeredActivities.map(renderActivityCard).join('');
+      } else if (tab === 'favorites') {
+        const favoriteActivities = activities.filter(a => favorites.includes(a.id));
+        content.innerHTML = favoriteActivities.length === 0 
+          ? '<div class="empty-state">暂无收藏活动</div>'
+          : favoriteActivities.map(renderActivityCard).join('');
+      } else if (tab === 'reminders') {
+        const reminderActivities = activities.filter(a => reminders.includes(a.id));
+        content.innerHTML = reminderActivities.length === 0 
+          ? '<div class="empty-state">暂无提醒活动</div>'
+          : reminderActivities.map(renderActivityCard).join('');
+      } else if (tab === 'myActivities') {
+        const myActivities = activities.filter(a => a.publisher === currentUser.username);
+        content.innerHTML = myActivities.length === 0 
+          ? '<div class="empty-state">暂无发布活动</div>'
+          : myActivities.map(renderActivityCard).join('');
+      }
+
+      document.querySelectorAll('.profile-tab').forEach(t => t.classList.remove('active'));
+      event.target.classList.add('active');
+    }
+
+    function updateStats() {
+      document.getElementById('statTotal').textContent = activities.length;
+      document.getElementById('statActive').textContent = activities.filter(a => getActivityStatus(a) === 'active').length;
+      document.getElementById('statParticipants').textContent = activities.reduce((sum, a) => sum + a.participants.length, 0);
+      document.getElementById('statComments').textContent = activities.reduce((sum, a) => sum + a.comments.length, 0);
+    }
+
+    function renderHotActivities() {
+      const sorted = [...activities].sort((a, b) => {
+        const scoreA = a.participants.length * 2 + a.comments.length;
+        const scoreB = b.participants.length * 2 + b.comments.length;
+        return scoreB - scoreA;
+      }).slice(0, 5);
+
+      document.getElementById('hotActivities').innerHTML = sorted.map((activity, index) => `
+        <div class="hot-item" onclick="showActivityDetail(${activity.id})">
+          <div class="hot-rank ${index < 3 ? 'top' : ''}">${index + 1}</div>
+          <div class="hot-info">
+            <div class="hot-title">${activity.title}</div>
+            <div class="hot-meta">${activity.participants.length}人报名</div>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function renderUpcomingActivities() {
+      const sorted = [...activities]
+        .filter(a => getActivityStatus(a) === 'upcoming')
+        .sort((a, b) => new Date(a.time) - new Date(b.time))
+        .slice(0, 5);
+
+      document.getElementById('upcomingActivities').innerHTML = sorted.map(activity => `
+        <div class="hot-item" onclick="showActivityDetail(${activity.id})">
+          <div class="hot-rank">📅</div>
+          <div class="hot-info">
+            <div class="hot-title">${activity.title}</div>
+            <div class="hot-meta">${formatDateTime(activity.time)}</div>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function renderHotTags() {
+      const tagCount = {};
+      activities.forEach(activity => {
+        activity.tags.forEach(tag => {
+          tagCount[tag] = (tagCount[tag] || 0) + 1;
+        });
+      });
+
+      const sortedTags = Object.entries(tagCount).sort((a, b) => b[1] - a[1]).slice(0, 8);
+
+      document.getElementById('hotTags').innerHTML = sortedTags.map(([tag, count]) => `
+        <span class="tag-item" onclick="filterByTag('${tag}')">${tag} (${count})</span>
+      `).join('');
+    }
+
+    function filterByTag(tag) {
+      document.getElementById('searchInput').value = tag;
+      searchActivities();
     }
 
     document.addEventListener('click', e => {
-      if (e.target.classList.contains('modal')) {
-        e.target.classList.remove('show')
+      if (e.target.classList.contains('modal-overlay')) {
+        e.target.classList.remove('show');
       }
-    })
+    });
 
-    renderActivities()
+    init();
   </script>
 </body>
 </html>
