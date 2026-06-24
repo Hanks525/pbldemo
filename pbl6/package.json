@@ -1,34 +1,30 @@
 {
-  "name": "campus-event-hub",
-  "version": "0.1.0",
-  "private": true,
+  "name": "campus-event-platform",
+  "version": "1.0.0",
+  "description": "校园活动发布平台",
+  "main": "server/app.js",
   "scripts": {
-    "dev": "next dev",
-    "build": "next build",
-    "start": "next start",
-    "lint": "next lint"
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "server": "node server/app.js",
+    "server:dev": "nodemon server/app.js"
   },
   "dependencies": {
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0",
-    "next": "14.2.3",
-    "mongoose": "^8.2.0",
+    "express": "^4.18.2",
+    "mongoose": "^7.6.3",
     "bcryptjs": "^2.4.3",
     "jsonwebtoken": "^9.0.2",
-    "cookie": "^0.6.0"
+    "cors": "^2.8.5",
+    "dotenv": "^16.3.1",
+    "vue": "^3.4.21",
+    "lucide-vue-next": "^0.36.0"
   },
   "devDependencies": {
-    "typescript": "^5.4.2",
-    "@types/node": "^20.11.0",
-    "@types/react": "^18.2.0",
-    "@types/react-dom": "^18.2.0",
-    "@types/bcryptjs": "^2.4.6",
-    "@types/jsonwebtoken": "^9.0.5",
-    "@types/cookie": "^0.6.0",
-    "tailwindcss": "^3.4.1",
+    "@tailwindcss/vite": "^4.0.0",
+    "autoprefixer": "^10.4.17",
+    "nodemon": "^3.0.1",
     "postcss": "^8.4.35",
-    "autoprefixer": "^10.4.18",
-    "eslint": "^8.57.0",
-    "eslint-config-next": "14.2.3"
+    "vite": "^6.5.0"
   }
 }
